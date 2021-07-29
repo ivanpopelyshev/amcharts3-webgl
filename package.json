@@ -1,0 +1,101 @@
+{
+  "name": "pixi-amcharts3",
+  "version": "0.0.1",
+  "description": "PixiJS v6 plugin for smooth HHAA rendering of shapes",
+  "author": "Ivan Popelyshev",
+  "contributors": [
+    "Ivan Popelyshev <ivan.popelyshev@gmail.com>"
+  ],
+  "main": "./dist/pixi-amcharts3.js",
+  "module": "./lib/pixi-amcharts3.es.js",
+  "bundle": "./dist/pixi-amcharts3.umd.js",
+  "namespace": "AmCharts",
+  "types": "./index.d.ts",
+  "homepage": "http://www.amcharts.com/",
+  "bugs": "https://github.com/ivanpopelyshev/pixi-amcharts3/issues",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ivanpopelyshev/pixi-amcharts3.git"
+  },
+  "scripts": {
+    "clean": "rimraf dist/* lib/* compile",
+    "start": "run-s watch",
+    "watch": "rollup -cw",
+    "prebuild": "run-s clean lint types",
+    "build": "rollup -c",
+    "postbuild": "run-s build:types",
+    "build:prod": "cross-env NODE_ENV=production run-s build",
+    "prebuild:types": "rimraf compile",
+    "build:types": "tsc --outDir compile && api-extractor run",
+    "lint": "eslint ./src",
+    "types": "tsc -noEmit",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish",
+    "postversion": "run-s build:prod",
+    "postpublish": "git push && git push --tags",
+    "prepack": "clean-package",
+    "postpack": "clean-package restore"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=14",
+    "npm": ">=7"
+  },
+  "clean-package": {
+    "indent": 2,
+    "remove": [
+      "clean-package",
+      "scripts",
+      "engines",
+      "devDependencies",
+      "eslintConfig"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "@pixi/eslint-config"
+    ]
+  },
+  "files": [
+    "dist/",
+    "lib/",
+    "index.d.ts",
+    "LICENSE",
+    "package.json",
+    "README.md"
+  ],
+  "peerDependencies": {
+    "@pixi/constants": "^6.0.4",
+    "@pixi/core": "^6.0.4",
+    "@pixi/display": "^6.0.4",
+    "@pixi/graphics": "^6.0.4",
+    "@pixi/math": "^6.0.4",
+    "@pixi/utils": "^6.0.4",
+	"@pixi/graphics-smooth": "^0.0.13"
+  },
+  "devDependencies": {
+    "@microsoft/api-extractor": "7.17.1",
+    "@pixi-build-tools/rollup-configurator": "~1.0.11",
+    "@pixi/constants": "^6.0.4",
+    "@pixi/core": "^6.0.4",
+    "@pixi/display": "^6.0.4",
+    "@pixi/eslint-config": "^2.0.1",
+    "@pixi/graphics": "^6.0.4",
+    "@pixi/math": "^6.0.4",
+    "@pixi/utils": "^6.0.4",
+    "@typescript-eslint/eslint-plugin": "^4.16.1",
+    "@typescript-eslint/parser": "^4.16.1",
+    "clean-package": "^1.0.1",
+    "cross-env": "^7.0.3",
+    "eslint": "^7.21.0",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^2.5.3",
+    "rollup": "^2.23.1",
+    "tslib": "^2.0.1",
+    "typescript": "^3.9.7"
+  }
+}
