@@ -162,3 +162,11 @@ export function toFixed(a: any, b: any)  {
     }
     return String(e)
 }
+
+export function realWrite (a: any, b: any) {
+    a.write(b)
+};
+
+export function isString (a: any) {
+    return "string" == typeof a ? !0 : !1
+};

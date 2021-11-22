@@ -32,18 +32,18 @@
             });
         for (var c in a) b.prototype[c] = a[c];
         return b
-    };
+    };  // TODO BaseClass.ts line 12
     d.addChart = function(a) {
         window.requestAnimationFrame ? d.animationRequested || (d.animationRequested = !0, window.requestAnimationFrame(d.update)) : d.updateInt || (d.updateInt = setInterval(function() {
             d.update()
         }, Math.round(1E3 / d.updateRate)));
         d.charts.push(a)
-    };
+    }; // TODO charts.ts 7
     d.removeChart = function(a) {
         for (var b = d.charts, c = b.length - 1; 0 <= c; c--) b[c] == a && b.splice(c, 1);
         0 === b.length && (d.requestAnimation && (window.cancelAnimationFrame(d.requestAnimation),
             d.animationRequested = !1), d.updateInt && (clearInterval(d.updateInt), d.updateInt = NaN))
-    };
+    }; // TODO charts.ts 14
     d.isModern = !0;
     d.getIEVersion = function() {
         var a = 0,
@@ -208,7 +208,7 @@
     };
     d.realWrite = function(a, b) {
         a.write(b)
-    };
+    }; // TODO utils.ts line 166
     d.updateCount = 0;
     d.validateAt = Math.round(d.updateRate / 10);
     d.update = function() {
@@ -219,7 +219,7 @@
         if (a)
             for (var c = a.length - 1; 0 <= c; c--) a[c].update && a[c].update(), b && (a[c].autoResize ? a[c].validateSize && a[c].validateSize() : a[c].premeasure && a[c].premeasure());
         window.requestAnimationFrame && (d.requestAnimation = window.requestAnimationFrame(d.update))
-    };
+    }; // TODO charts.ts line 24
     "complete" == document.readyState && d.handleLoad()
 })();
 (function() {
@@ -598,13 +598,13 @@
     };
     d.isString = function(a) {
         return "string" == typeof a ? !0 : !1
-    };
+    }; // TODO utils.ts line 170
     d.extend = function(a, b, c) {
         var e;
         a || (a = {});
         for (e in b) c ? a.hasOwnProperty(e) || (a[e] = b[e]) : a[e] = b[e];
         return a
-    };
+    }; // TODO BaseClass.ts line 57
     d.copyProperties = function(a, b) {
         for (var c in a) a.hasOwnProperty(c) && "events" != c && void 0 !== a[c] && "function" != typeof a[c] && "cname" != c && (b[c] = a[c])
     };

@@ -9,6 +9,7 @@ export const mapTranslations: Array<any> = [];
 
 export interface ISettings
 {
+    updateRate: number,
     useUTC: boolean,
     uid: number,
     isModern: boolean,
@@ -24,6 +25,7 @@ export interface ISettings
 }
 
 export const settings: ISettings = {
+    updateRate: 60,
     useUTC: false,
     uid: 0,
     isModern: true,
