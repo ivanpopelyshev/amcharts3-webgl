@@ -1,8 +1,8 @@
 /* eslint-disable */
 import { Dict } from "@pixi/utils";
 import { BaseClass, extend } from "./BaseClass";
-import { addGlobalListeners } from "./events";
-import { ready } from "./init";
+import { addGlobalListeners, clearGlobalListeners  } from "./events";
+import { ready, handleLoad } from "./init";
 import { settings, themes } from "./settings";
 import { realWrite, isString } from "./utils";
 
@@ -43,6 +43,9 @@ export function update(): void {
 }
 
 let amClasses: Dict<any> = {}
+export class AmChart extends BaseClass {
+    write(a:any){}
+}
 
 export function makeChart (a: any, b: any, c: any):AmChart {
     var e = b.type,
@@ -69,6 +72,16 @@ export function makeChart (a: any, b: any, c: any):AmChart {
     return f
 }
 
-class AmChart extends BaseClass {
-    write(a:any){}
-}
+export function clear () {
+    var a = charts
+    if (a) {
+        for (var b = a.length - 1; 0 <= b; b--) { 
+            a[b].clear()
+        }
+    }
+    if (requestAnimation) {
+        window.cancelAnimationFrame(requestAnimation);
+    } 
+    charts.length = 0;
+    clearGlobalListeners()
+};

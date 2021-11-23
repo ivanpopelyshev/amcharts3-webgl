@@ -1,7 +1,7 @@
 (function() {
     var d;
     window.AmCharts ? d = window.AmCharts : (d = {}, window.AmCharts = d, d.themes = {}, d.maps = {}, d.inheriting = {}, d.charts = [], d.onReadyArray = [], d.useUTC = !1, d.updateRate = 60, d.uid = 0, d.lang = {}, d.translations = {}, d.mapTranslations = {}, d.windows = {}, d.initHandlers = [], d.amString = "am", d.pmString = "pm");
-    d.Class = function(a) {
+    d.Class = function(a) { // TODO BaseClass.ts line 12
         var b = function() {
             arguments[0] !== d.inheriting && (this.events = {}, this.construct.apply(this, arguments))
         };
@@ -32,7 +32,7 @@
             });
         for (var c in a) b.prototype[c] = a[c];
         return b
-    };  // TODO BaseClass.ts line 12
+    }; 
     d.addChart = function(a) {
         window.requestAnimationFrame ? d.animationRequested || (d.animationRequested = !0, window.requestAnimationFrame(d.update)) : d.updateInt || (d.updateInt = setInterval(function() {
             d.update()
@@ -51,7 +51,7 @@
         "Microsoft Internet Explorer" == navigator.appName && (b = navigator.userAgent, c = /MSIE ([0-9]{1,}[.0-9]{0,})/, null !== c.exec(b) && (a = parseFloat(RegExp.$1)));
         return a
     };
-    d.applyLang = function(a, b) {
+    d.applyLang = function(a, b) { // TODO locale.ts line 130
         var c = d.translations;
         b.dayNames = d.extend({}, d.dayNames);
         b.shortDayNames = d.extend({}, d.shortDayNames);
@@ -70,25 +70,25 @@
     if (document.addEventListener || window.opera) d.isNN = !0, d.isIE = !1, d.dx = .5, d.dy = .5;
     document.attachEvent && (d.isNN = !1, d.isIE = !0, d.isModern || (d.dx = 0, d.dy = 0));
     window.chrome && (d.chrome = !0);
-    d.handleMouseUp = function(a) {
+    d.handleMouseUp = function(a) { // TODO events.ts line 6
         for (var b = d.charts, c = 0; c < b.length; c++) {
             var e = b[c];
             e && e.handleReleaseOutside && e.handleReleaseOutside(a)
         }
     };
-    d.handleMouseMove = function(a) {
+    d.handleMouseMove = function(a) { // TODO events.ts line 12
         for (var b = d.charts, c = 0; c < b.length; c++) {
             var e = b[c];
             e && e.handleMouseMove && e.handleMouseMove(a)
         }
     };
-    d.handleKeyUp = function(a) {
+    d.handleKeyUp = function(a) { // TODO events.ts line 18
         for (var b = d.charts, c = 0; c < b.length; c++) {
             var e = b[c];
             e && e.handleKeyUp && e.handleKeyUp(a)
         }
     };
-    d.handleWheel =
+    d.handleWheel = // TODO events.ts line 24
         function(a) {
             for (var b = d.charts, c = 0; c < b.length; c++) {
                 var e = b[c];
@@ -98,16 +98,16 @@
                 }
             }
         };
-    d.resetMouseOver = function() {
+    d.resetMouseOver = function() { // TODO events.ts line 33
         for (var a = d.charts, b = 0; b < a.length; b++) {
             var c = a[b];
             c && (c.mouseIsOver = !1)
         }
     };
-    d.ready = function(a) {
+    d.ready = function(a) { // TODO init.ts line 22
         d.onReadyArray.push(a)
     };
-    d.handleLoad = function() {
+    d.handleLoad = function() { // TODO init.ts line 25
         d.isReady = !0;
         for (var a = d.onReadyArray, b = 0; b < a.length; b++) {
             var c = a[b];
@@ -115,13 +115,13 @@
         }
         d.onReadyArray = []
     };
-    d.addInitHandler = function(a, b) {
+    d.addInitHandler = function(a, b) { // TODO init.ts line 7
         d.initHandlers.push({
             method: a,
             types: b
         })
     };
-    d.callInitHandler = function(a) {
+    d.callInitHandler = function(a) { // TODO init.ts line 13
         var b = d.initHandlers;
         if (d.initHandlers)
             for (var c = 0; c < b.length; c++) {
@@ -129,16 +129,16 @@
                 e.types ? d.isInArray(e.types, a.type) && e.method(a) : e.method(a)
             }
     };
-    d.getUniqueId = function() {
+    d.getUniqueId = function() { // TODO events.ts line 43
         d.uid++;
         return "AmChartsEl-" + d.uid
     };
-    d.addGlobalListeners = function() {
+    d.addGlobalListeners = function() { // TODO events.ts line 47
         d.globalListenersAdded || (d.globalListenersAdded = !0, d.isNN && (document.addEventListener("mousemove", d.handleMouseMove), document.addEventListener("keyup", d.handleKeyUp),
             document.addEventListener("mouseup", d.handleMouseUp, !0), window.addEventListener("load", d.handleLoad, !0)), d.isIE && (document.attachEvent("onmousemove", d.handleMouseMove), document.attachEvent("onmouseup", d.handleMouseUp), window.attachEvent("onload", d.handleLoad)))
     };
     d.addGlobalListeners();
-    d.addWheelListeners = function() {
+    d.addWheelListeners = function() { // TODO events.ts line 52
         d.wheelIsListened || (d.isNN && (window.addEventListener("DOMMouseScroll", d.handleWheel, {
             passive: !1,
             useCapture: !0
@@ -149,7 +149,7 @@
         d.isIE && document.attachEvent("onmousewheel", d.handleWheel));
         d.wheelIsListened = !0
     };
-    d.clear = function() {
+    d.clear = function() { // TODO events.ts line 77
         var a = d.charts;
         if (a)
             for (var b = a.length - 1; 0 <= b; b--) a[b].clear();
@@ -162,7 +162,7 @@
         d.globalListenersAdded = !1;
         d.wheelIsListened = !1
     };
-    d.makeChart = function(a, b, c) {
+    d.makeChart = function(a, b, c) { // TODO charts.ts line 50
         var e = b.type,
             g = b.theme;
         d.addGlobalListeners();
@@ -206,12 +206,12 @@
         });
         return f
     };
-    d.realWrite = function(a, b) {
+    d.realWrite = function(a, b) { // TODO utils.ts line 166
         a.write(b)
-    }; // TODO utils.ts line 166
+    };
     d.updateCount = 0;
     d.validateAt = Math.round(d.updateRate / 10);
-    d.update = function() {
+    d.update = function() { // TODO charts.ts line 24
         var a = d.charts;
         d.updateCount++;
         var b = !1;
@@ -219,12 +219,14 @@
         if (a)
             for (var c = a.length - 1; 0 <= c; c--) a[c].update && a[c].update(), b && (a[c].autoResize ? a[c].validateSize && a[c].validateSize() : a[c].premeasure && a[c].premeasure());
         window.requestAnimationFrame && (d.requestAnimation = window.requestAnimationFrame(d.update))
-    }; // TODO charts.ts line 24
+    };
     "complete" == document.readyState && d.handleLoad()
 })();
+
+
 (function() {
     var d = window.AmCharts;
-    d.toBoolean = function(a, b) {
+    d.toBoolean = function(a, b) { //TODO utils.ts line 4
         if (void 0 === a) return b;
         switch (String(a).toLowerCase()) {
             case "true":
@@ -240,12 +242,12 @@
                 return !!a
         }
     };
-    d.removeFromArray = function(a, b) {
+    d.removeFromArray = function(a, b) { //TODO utils.ts line 20
         var c;
         if (void 0 !== b && void 0 !== a)
             for (c = a.length - 1; 0 <= c; c--) a[c] == b && a.splice(c, 1)
     };
-    d.getPath = function() {
+    d.getPath = function() { //TODO utils.ts line 25
         var a = document.getElementsByTagName("script");
         if (a)
             for (var b = 0; b < a.length; b++) {
@@ -254,23 +256,23 @@
                     "/")
             }
     };
-    d.normalizeUrl = function(a) {
+    d.normalizeUrl = function(a) { //TODO utils.ts line 34
         return "" !== a && -1 === a.search(/\/$/) ? a + "/" : a
     };
-    d.isAbsolute = function(a) {
+    d.isAbsolute = function(a) { //TODO utils.ts line 37
         return 0 === a.search(/^http[s]?:|^\//)
     };
-    d.isInArray = function(a, b) {
+    d.isInArray = function(a, b) { //TODO utils.ts line 40
         for (var c = 0; c < a.length; c++)
             if (a[c] == b) return !0;
         return !1
     };
-    d.getDecimals = function(a) {
+    d.getDecimals = function(a) { //TODO utils.ts line 45
         var b = 0;
         isNaN(a) || (a = String(a), -1 != a.indexOf("e-") ? b = Number(a.split("-")[1]) : -1 != a.indexOf(".") && (b = a.split(".")[1].length));
         return b
     };
-    d.wordwrap = function(a, b, c, e) {
+    d.wordwrap = function(a, b, c, e) { //TODO utils.ts line 50
         var g, f, h, k;
         a += "";
         if (1 > b) return a;
@@ -283,10 +285,10 @@
         }
         return k.join(c)
     };
-    d.trim = function(a) {
+    d.trim = function(a) { //TODO utils.ts line 63
         return a.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, "")
     };
-    d.wrappedText = function(a, b, c, e, g, f, h, k) {
+    d.wrappedText = function(a, b, c, e, g, f, h, k) { //FIXME utils.ts line 67
         var l = d.text(a, b, c, e, g, f, h);
         if (l) {
             var m = l.getBBox();
@@ -303,7 +305,7 @@
         }
         return l
     };
-    d.getStyle = function(a, b) {
+    d.getStyle = function(a, b) { //TODO utils.ts line 86
         var c = "";
         if (document.defaultView && document.defaultView.getComputedStyle) try {
             c = document.defaultView.getComputedStyle(a, "").getPropertyValue(b)
@@ -312,10 +314,10 @@
         }), c = a.currentStyle[b]);
         return c
     };
-    d.removePx = function(a) {
+    d.removePx = function(a) { //TODO utils.ts line 95
         if (void 0 !== a) return Number(a.substring(0, a.length - 2))
     };
-    d.getURL = function(a, b) {
+    d.getURL = function(a, b) { //TODO utils.ts line 98
         if (a)
             if ("_self" !=
                 b && b)
@@ -327,10 +329,10 @@
                     c ? c.src = a : (c = d.windows[b]) ? c.opener && !c.opener.closed ? c.location.href = a : d.windows[b] = window.open(a) : d.windows[b] = window.open(a)
                 } else window.location.href = a
     };
-    d.ifArray = function(a) {
+    d.ifArray = function(a) { //TODO utils.ts line 110
         return a && "object" == typeof a && 0 < a.length ? !0 : !1
     };
-    d.callMethod = function(a, b) {
+    d.callMethod = function(a, b) { //TODO utils.ts line 113
         var c;
         for (c = 0; c < b.length; c++) {
             var e = b[c];
@@ -347,10 +349,10 @@
             }
         }
     };
-    d.toNumber = function(a) {
+    d.toNumber = function(a) { //TODO utils.ts line 130
         return "number" == typeof a ? a : Number(String(a).replace(/[^0-9\-.]+/g, ""))
     };
-    d.toColor = function(a) {
+    d.toColor = function(a) { //TODO utils.ts line 133
         if ("" !== a && void 0 !== a)
             if (-1 != a.indexOf(",")) {
                 a = a.split(",");
@@ -362,29 +364,29 @@
             } else a = a.substring(a.length - 6, a.length), a = "#" + a;
         return a
     };
-    d.toCoordinate = function(a, b, c) {
+    d.toCoordinate = function(a, b, c) { //TODO utils.ts line 145
         var e;
         void 0 !== a && (a = String(a), c && c < b && (b = c), e = Number(a), -1 != a.indexOf("!") &&
         (e = b - Number(a.substr(1))), -1 != a.indexOf("%") && (e = b * Number(a.substr(0, a.length - 1)) / 100));
         return e
     };
-    d.fitToBounds = function(a, b, c) {
+    d.fitToBounds = function(a, b, c) { //TODO utils.ts line 151
         a < b && (a = b);
         a > c && (a = c);
         return a
     };
-    d.isDefined = function(a) {
+    d.isDefined = function(a) { //TODO utils.ts line 156
         return void 0 === a ? !1 : !0
     };
-    d.stripNumbers = function(a) {
+    d.stripNumbers = function(a) { //TODO utils.ts line 159
         return a.replace(/[0-9]+/g, "")
     };
-    d.roundTo = function(a, b) {
+    d.roundTo = function(a, b) { //TODO utils.ts line 162
         if (0 > b) return a;
         var c = Math.pow(10, b);
         return Math.round(a * c) / c
     };
-    d.toFixed = function(a, b) {
+    d.toFixed = function(a, b) { //TODO utils.ts line 167
         var c = !1;
         0 > a && (c = !0, a = Math.abs(a));
         var e = String(Math.round(a * Math.pow(10, b)));
@@ -6259,9 +6261,9 @@
         }
     })
 })();
-(function() {
+(function() { // looks like an important code module with different chart shapes declarations. Made it a separate file chartShapes.ts
     var d = window.AmCharts;
-    d.circle = function(a, b, c, e, g, f, h, k, l) {
+    d.circle = function(a, b, c, e, g, f, h, k, l) { // FIXME chartShapes.ts line 5 there is different circle method inside, a is a container with circle method mb 
         0 >= b && (b = .001);
         if (void 0 == g || 0 === g) g = .01;
         void 0 === f && (f = "#000000");
@@ -6277,7 +6279,7 @@
         k && a.gradient("radialGradient", [c, d.adjustLuminosity(c, -.6)]);
         return a
     };
-    d.text = function(a, b, c, e, g, f, h, k) {
+    d.text = function(a, b, c, e, g, f, h, k) { // FIXME chartShapes.ts line 35
         f || (f = "middle");
         "right" == f && (f = "end");
         "left" == f && (f = "start");
@@ -6552,11 +6554,11 @@
         e.push(a);
         return e
     };
-    d.rgb2hex = function(a) {
+    d.rgb2hex = function(a) { // TODO chartShapes.ts line 53
         return (a = a.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i)) &&
         4 === a.length ? "#" + ("0" + parseInt(a[1], 10).toString(16)).slice(-2) + ("0" + parseInt(a[2], 10).toString(16)).slice(-2) + ("0" + parseInt(a[3], 10).toString(16)).slice(-2) : ""
     };
-    d.adjustLuminosity = function(a, b) {
+    d.adjustLuminosity = function(a, b) { // TODO chartShapes.ts line 59
         a && -1 != a.indexOf("rgb") && (a = d.rgb2hex(a));
         a = String(a).replace(/[^0-9a-f]/gi, "");
         6 > a.length && (a = String(a[0]) + String(a[0]) + String(a[1]) + String(a[1]) + String(a[2]) + String(a[2]));
@@ -8135,7 +8137,7 @@
         if (void 0 !== b) return c = c.indexOf(a), b = String(b), b = b.substr(c, a.length), "0" == b.charAt(0) &&
         (b = b.substr(1, b.length - 1)), b = Number(b), isNaN(b) && (b = 0), -1 != a.indexOf("M") && b--, b
     };
-    d.formatDate = function(a, b, c) {
+    d.formatDate = function(a, b, c) { // TODO locale.ts line 50
         c || (c = d);
         var e, g, f, h, k, l, m, n, q = d.getWeekNumber(a);
         d.useUTC ? (e = a.getUTCFullYear(), g = a.getUTCMonth(), f = a.getUTCDate(), h = a.getUTCDay(), k = a.getUTCHours(), l = a.getUTCMinutes(), m = a.getUTCSeconds(), n = a.getUTCMilliseconds()) : (e = a.getFullYear(), g = a.getMonth(), f = a.getDate(), h = a.getDay(), k = a.getHours(), l = a.getMinutes(), m = a.getSeconds(), n = a.getMilliseconds());

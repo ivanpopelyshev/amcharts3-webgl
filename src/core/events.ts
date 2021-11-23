@@ -45,10 +45,23 @@ export function getUniqueId() {
     return "AmChartsEl-" + settings.uid
 }
 export function addGlobalListeners() {
-    globalListenersAdded || (globalListenersAdded = !0, settings.isNN && (document.addEventListener("mousemove", handleMouseMove), document.addEventListener("keyup", handleKeyUp),
-        document.addEventListener("mouseup", handleMouseUp, !0), window.addEventListener("load", handleLoad, !0)), settings.isIE && ((document as any).attachEvent("onmousemove", handleMouseMove), (document as any).attachEvent("onmouseup", handleMouseUp), (window as any).attachEvent("onload", handleLoad)))
+    if (!globalListenersAdded)  {
+        globalListenersAdded = !0
+        if (settings.isNN) {
+            document.addEventListener("mousemove", handleMouseMove)
+            document.addEventListener("keyup", handleKeyUp)
+            document.addEventListener("mouseup", handleMouseUp, !0)
+            window.addEventListener("load", handleLoad, !0)
+        } 
+        if (settings.isIE) {
+            (document as any).attachEvent("onmousemove", handleMouseMove)
+            (document as any).attachEvent("onmouseup", handleMouseUp)
+            (window as any).attachEvent("onload", handleLoad)
+        }
+    }
 }
 addGlobalListeners();
+
 export function addWheelListeners() {
     wheelIsListened || (settings.isNN && ((window as any).addEventListener("DOMMouseScroll", handleWheel, {
         passive: !1,
@@ -59,4 +72,22 @@ export function addWheelListeners() {
     })),
     settings.isIE && (document as any).attachEvent("onmousewheel", handleWheel));
     wheelIsListened = !0
+}
+
+export function clearGlobalListeners () {
+    if (settings.isNN) {
+        document.removeEventListener("mousemove", handleMouseMove, !0)
+        document.removeEventListener("keyup", handleKeyUp, !0)
+        document.removeEventListener("mouseup", handleMouseUp, !0)
+        window.removeEventListener("load", handleLoad, !0)
+        window.removeEventListener("DOMMouseScroll", handleWheel, !0)
+        document.removeEventListener("mousewheel", handleWheel, !0)
+    }
+    if (settings.isIE) {
+        (document as any).detachEvent("onmousemove", handleMouseMove)
+        (document as any).detachEvent("onmouseup", handleMouseUp)
+        (window as any).detachEvent("onload", handleLoad)
+    }
+    globalListenersAdded = !1;
+    wheelIsListened = !1
 }

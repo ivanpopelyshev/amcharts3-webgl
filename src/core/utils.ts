@@ -1,5 +1,6 @@
 /* eslint-disable */
-import { windows } from './settings';
+import { windows, settings} from './settings';
+import { text } from './chartShapes';
 
 export function toBoolean(a: any, b: any) {
     if (void 0 === a) return b;
@@ -63,6 +64,23 @@ export function wordwrap(a: any, b: any, c: any, e: any) {
 export function trim(a: any) {
     return a.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, "")
 }
+export function wrappedText (a: any, b: any, c: any, e: any, g: any, f: any, h: any, k: any) {
+    var l = text(a, b, c, e, g, f, h);
+    if (l) {
+        var m = l.getBBox();
+        if (m.width > k) {
+            var n = "\n";
+            settings.isModern || (n = "<br>");
+            k = Math.floor(k / (m.width /
+                b.length));
+            2 < k && (k -= 2);
+            b = wordwrap(b, k, n, !0);
+            l.remove();
+            l = text(a, b, c, e, g, f, h)
+        }
+    }
+    return l
+};
 export function getStyle(a: any, b: any)  {
     let c = "";
     if (document.defaultView && document.defaultView.getComputedStyle) try {
