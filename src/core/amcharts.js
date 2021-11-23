@@ -703,7 +703,7 @@
 })();
 (function() {
     var d = window.AmCharts;
-    d.AxisBase = d.Class({
+    d.AxisBase = d.Class({ // TODO classes/AxisBase.ts
         construct: function(a) {
             this.createEvents("clickItem", "rollOverItem", "rollOutItem", "rollOverGuide", "rollOutGuide", "clickGuide");
             this.titleDY = this.y = this.x = this.dy = this.dx = 0;
