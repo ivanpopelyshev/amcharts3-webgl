@@ -616,12 +616,12 @@
             for (var g in a.listeners) b = a.listeners[g], a.addListener(b.event, b.method);
         return a
     };
-    d.fixNewLines = function(a) {
+    d.fixNewLines = function(a) { // TODO utils.ts line 286
         var b = RegExp("\\n", "g");
         a && (a = a.replace(b, "<br />"));
         return a
     };
-    d.fixBrakes = function(a) {
+    d.fixBrakes = function(a) { // TODO utils.ts line 292
         if (d.isModern) {
             var b = RegExp("<br>", "g");
             a && (a = a.replace(b, "\n"))

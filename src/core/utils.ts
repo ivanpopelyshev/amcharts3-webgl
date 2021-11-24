@@ -282,3 +282,17 @@ export function resetDateToMin (a: any, b: any, c: any, e?: any) {
         k, l, m, n);
     return a
 };
+
+export function fixNewLines (a: string) {
+    var b = RegExp("\\n", "g");
+    a && (a = a.replace(b, "<br />"));
+    return a
+};
+
+export function fixBrakes (a: string) {
+    if (settings.isModern) {
+        var b = RegExp("<br>", "g");
+        a && (a = a.replace(b, "\n"))
+    } else a = fixNewLines(a);
+    return a
+};

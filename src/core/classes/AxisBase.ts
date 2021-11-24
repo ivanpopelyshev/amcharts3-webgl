@@ -3,8 +3,9 @@
 import { BaseClass, applyTheme, remove, extend, processObject } from "../BaseClass";
 import { Guide } from "./Guide";
 import { text } from "../chartShapes";
-import { setCN, getPeriodDuration, extractPeriod, resetDateToMin } from "../utils";
-import { settings } from "..";
+import { setCN, getPeriodDuration, extractPeriod, resetDateToMin, fixBrakes } from "../utils";
+import { settings } from "../settings";
+import { formatDate } from "../locale"
 import { Dict } from "@pixi/utils";
 import { RecItem } from "./RecItem";
 
@@ -167,6 +168,7 @@ export abstract class AxisBase extends BaseClass {
     stickBalloonToStart: any
     cname: any
     axisItemRenderer: typeof RecItem
+    balloonTextFunction: any
 
     zoom(a: any, b: any): void {
         this.start = a
@@ -446,25 +448,36 @@ export abstract class AxisBase extends BaseClass {
                 if ("radar" == b.type) {
                     if (g = this.axisWidth - g, 0 > g || g > this.axisWidth) continue
                 } else this.rotate ? "date" == this.type && "middle" == this.gridPosition && (I = -y * this.stepWidth / 2) : "date" == this.type && (g = this.axisWidth - g);
-                f = !1;
-                this.nextPeriod[hPeriod] && (f = this.checkPeriodChange(this.nextPeriod[hPeriod], 1, p, l, hPeriod));
+                var fBool = !1;
+                this.nextPeriod[hPeriod] && (fBool = this.checkPeriodChange(this.nextPeriod[hPeriod], 1, p, l, hPeriod));
                 l = !1;
                 let format: any
-                f && this.markPeriodChange 
-                    ? (f = this.dateFormatsObject[this.nextPeriod[hPeriod]], this.twoLineMode && (f = this.dateFormatsObject[hPeriod] + "\n" + f, f = d.fixBrakes(f)), l = !0) 
+                fBool && this.markPeriodChange 
+                    ? (
+                        f = this.dateFormatsObject[this.nextPeriod[hPeriod]], 
+                        this.twoLineMode && (f = this.dateFormatsObject[hPeriod] + "\n" + f, 
+                        f = fixBrakes(f)), 
+                        l = !0
+                    ) 
                     : f = this.dateFormatsObject[hPeriod];
                 r || (l = !1);
-                this.currentDateFormat =
-                    f;
-                f = d.formatDate(new Date(p), f, b);
+                this.currentDateFormat = f;
+                f = formatDate(new Date(p), f, b);
                 if (a == k && !c || a == B && !e) f = " ";
                 this.labelFunction && (f = this.labelFunction(f, new Date(p), this, A, uCount, m).toString());
                 this.boldLabels && (l = !0);
                 m = new this.axisItemRenderer(this, g, f, !1, n, I, !1, l); // FIXME amcharts.js line 5233 its initialized in ChartScrollbar
                 this.pushAxisItem(m);
                 m = l = p;
-                if (!isNaN(w))
-                    for (g = 1; g < uCount; g += w) this.gridAlpha = this.minorGridAlpha, f = p + x * g, f = resetDateToMin(new Date(f), A, w, t).getTime(), f = new this.axisItemRenderer(this, (f - this.startTime) * this.stepWidth, void 0, void 0, void 0, void 0, void 0, void 0, void 0, !0), this.pushAxisItem(f);
+                if (!isNaN(w)) {
+                    for (g = 1; g < uCount; g += w) {
+                        this.gridAlpha = this.minorGridAlpha
+                        var fNumber = p + x * g
+                        fNumber = resetDateToMin(new Date(f), A, w, t).getTime()
+                        var fAxisItemRendererInstance = new this.axisItemRenderer(this, (fNumber - this.startTime) * this.stepWidth, void 0, void 0, void 0, void 0, void 0, void 0, void 0, !0)
+                        this.pushAxisItem(fAxisItemRendererInstance);
+                    }
+                }
                 this.gridAlpha = z
             }
     }
@@ -529,7 +542,7 @@ export abstract class AxisBase extends BaseClass {
         this.prevBY = this.prevBX = NaN
     }
 
-    formatBalloonText (a: any): any {
+    formatBalloonText (a: any, b: any, c: any): any {
         return a
     }
 
@@ -567,18 +580,19 @@ export abstract class AxisBase extends BaseClass {
             e = this.coordinateToValue(a) // наш класс AxisBase - абстрактный, значит вызываются только его дети и эта функция тоже абстрактная
         }
         var f;
-        if (d = this.chart.chartCursor) f = d.index;
+        if (d = this.chart.chartCursor) f = settings.index;
         if (this.balloon && void 0 !== e && this.balloon.enabled) {
             if (this.balloonTextFunction) {
                 if ("date" == this.type || !0 === this.parseDates) e = new Date(e);
                 e = this.balloonTextFunction(e) // FIXME function is not declared nowhere
-            } else this.balloonText ? e = this.formatBalloonText(this.balloonText, f, c) : isNaN(e) || (e = this.formatValue(e, c)); // FIXME formatValue is in class ValueAxis amcharts.js line 1512 // FIXME formatBalloonText with 3 args is in serial.js line 1631
+            } else this.balloonText ? e = this.formatBalloonText(this.balloonText, f, c) : isNaN(e) || (e = this.formatValue(e, c)); // FIXME formatBalloonText with 3 args is in serial.js line 1631
             if (a != this.prevBX || b != this.prevBY) this.balloon.setPosition(a, b), this.prevBX = a, this.prevBY =
                 b, e && this.balloon.showBalloon(e)
         }
     }
 
-    abstract coordinateToValue(a: any) :void
+    abstract coordinateToValue(a: any) :void // FIXME coordinateToValue is in class ValueAxis amcharts.js line 1757
+    abstract formatValue(a: any, b: any, c?: any) :void // FIXME formatValue is in class ValueAxis amcharts.js line 1512
 
     adjustBalloonCoordinate (a: any, b?: any): void {
         return a

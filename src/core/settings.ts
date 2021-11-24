@@ -9,6 +9,7 @@ export const mapTranslations: Array<any> = [];
 
 export interface ISettings
 {
+    index: any,
     hasSVG: boolean,
     VML: boolean,
     updateRate: number,
@@ -27,6 +28,7 @@ export interface ISettings
 }
 
 export const settings: ISettings = {
+    index: undefined,
     hasSVG: true,
     VML: false,
     updateRate: 60,
