@@ -188,3 +188,97 @@ export function realWrite (a: any, b: any) {
 export function isString (a: any) {
     return "string" == typeof a ? !0 : !1
 };
+
+export function setCN (a: any, b: any, c: any, e?: any) {
+    if (a.addClassNames && b && (b = b.node) && c) {
+        var d = b.getAttribute("class");
+        a = a.classNamePrefix + "-";
+        e && (a = "");
+        d ? b.setAttribute("class", d + " " + a + c) : b.setAttribute("class", a + c)
+    }
+}
+
+export function getPeriodDuration(a: any, b?: any) :number {
+    void 0 === b && (b = 1);
+    var c;
+    switch (a) {
+        case "YYYY":
+            c = 316224E5;
+            break;
+        case "MM":
+            c = 26784E5;
+            break;
+        case "WW":
+            c = 6048E5;
+            break;
+        case "DD":
+            c = 864E5;
+            break;
+        case "hh":
+            c = 36E5;
+            break;
+        case "mm":
+            c = 6E4;
+            break;
+        case "ss":
+            c = 1E3;
+            break;
+        case "fff":
+            c = 1
+    }
+    return c * b
+};
+
+export function extractPeriod (a: any) {
+    var b = stripNumbers(a),
+        c = 1;
+    b != a && (c = Number(a.slice(0, a.indexOf(b))));
+    return {
+        period: b,
+        count: c
+    }
+};
+
+export function resetDateToMin (a: any, b: any, c: any, e?: any) {
+    void 0 === e && (e = 1);
+    var g, f, h, k, l, m, n;
+    settings.useUTC ? (g = a.getUTCFullYear(), f = a.getUTCMonth(), h = a.getUTCDate(), k = a.getUTCHours(), l = a.getUTCMinutes(), m = a.getUTCSeconds(), n = a.getUTCMilliseconds(), a = a.getUTCDay()) : (g = a.getFullYear(), f = a.getMonth(), h = a.getDate(), k = a.getHours(), l =
+        a.getMinutes(), m = a.getSeconds(), n = a.getMilliseconds(), a = a.getDay());
+    switch (b) {
+        case "YYYY":
+            g = Math.floor(g / c) * c;
+            f = 0;
+            h = 1;
+            n = m = l = k = 0;
+            break;
+        case "MM":
+            f = Math.floor(f / c) * c;
+            h = 1;
+            n = m = l = k = 0;
+            break;
+        case "WW":
+            h = a >= e ? h - a + e : h - (7 + a) + e;
+            n = m = l = k = 0;
+            break;
+        case "DD":
+            n = m = l = k = 0;
+            break;
+        case "hh":
+            k = Math.floor(k / c) * c;
+            n = m = l = 0;
+            break;
+        case "mm":
+            l = Math.floor(l / c) * c;
+            n = m = 0;
+            break;
+        case "ss":
+            m = Math.floor(m / c) * c;
+            n = 0;
+            break;
+        case "fff":
+            n = Math.floor(n / c) * c
+    }
+    settings.useUTC ? (a = new Date, a.setUTCFullYear(g, f, h), a.setUTCHours(k, l, m, n)) : a = new Date(g, f, h,
+        k, l, m, n);
+    return a
+};

@@ -206,7 +206,7 @@
         });
         return f
     };
-    d.realWrite = function(a, b) { // TODO utils.ts line 166
+    d.realWrite = function(a, b) { // TODO utils.ts line 184
         a.write(b)
     };
     d.updateCount = 0;
@@ -226,7 +226,7 @@
 
 (function() {
     var d = window.AmCharts;
-    d.toBoolean = function(a, b) { //TODO utils.ts line 4
+    d.toBoolean = function(a, b) { //TODO utils.ts line 5
         if (void 0 === a) return b;
         switch (String(a).toLowerCase()) {
             case "true":
@@ -242,12 +242,12 @@
                 return !!a
         }
     };
-    d.removeFromArray = function(a, b) { //TODO utils.ts line 20
+    d.removeFromArray = function(a, b) { //TODO utils.ts line 21
         var c;
         if (void 0 !== b && void 0 !== a)
             for (c = a.length - 1; 0 <= c; c--) a[c] == b && a.splice(c, 1)
     };
-    d.getPath = function() { //TODO utils.ts line 25
+    d.getPath = function() { //TODO utils.ts line 26
         var a = document.getElementsByTagName("script");
         if (a)
             for (var b = 0; b < a.length; b++) {
@@ -256,23 +256,23 @@
                     "/")
             }
     };
-    d.normalizeUrl = function(a) { //TODO utils.ts line 34
+    d.normalizeUrl = function(a) { //TODO utils.ts line 35
         return "" !== a && -1 === a.search(/\/$/) ? a + "/" : a
     };
-    d.isAbsolute = function(a) { //TODO utils.ts line 37
+    d.isAbsolute = function(a) { //TODO utils.ts line 38
         return 0 === a.search(/^http[s]?:|^\//)
     };
-    d.isInArray = function(a, b) { //TODO utils.ts line 40
+    d.isInArray = function(a, b) { //TODO utils.ts line 41
         for (var c = 0; c < a.length; c++)
             if (a[c] == b) return !0;
         return !1
     };
-    d.getDecimals = function(a) { //TODO utils.ts line 45
+    d.getDecimals = function(a) { //TODO utils.ts line 46
         var b = 0;
         isNaN(a) || (a = String(a), -1 != a.indexOf("e-") ? b = Number(a.split("-")[1]) : -1 != a.indexOf(".") && (b = a.split(".")[1].length));
         return b
     };
-    d.wordwrap = function(a, b, c, e) { //TODO utils.ts line 50
+    d.wordwrap = function(a, b, c, e) { //TODO utils.ts line 51
         var g, f, h, k;
         a += "";
         if (1 > b) return a;
@@ -285,7 +285,7 @@
         }
         return k.join(c)
     };
-    d.trim = function(a) { //TODO utils.ts line 63
+    d.trim = function(a) { //TODO utils.ts line 64
         return a.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, "")
     };
     d.wrappedText = function(a, b, c, e, g, f, h, k) { //FIXME utils.ts line 67
@@ -305,7 +305,7 @@
         }
         return l
     };
-    d.getStyle = function(a, b) { //TODO utils.ts line 86
+    d.getStyle = function(a, b) { //TODO utils.ts line 84
         var c = "";
         if (document.defaultView && document.defaultView.getComputedStyle) try {
             c = document.defaultView.getComputedStyle(a, "").getPropertyValue(b)
@@ -314,10 +314,10 @@
         }), c = a.currentStyle[b]);
         return c
     };
-    d.removePx = function(a) { //TODO utils.ts line 95
+    d.removePx = function(a) { //TODO utils.ts line 93
         if (void 0 !== a) return Number(a.substring(0, a.length - 2))
     };
-    d.getURL = function(a, b) { //TODO utils.ts line 98
+    d.getURL = function(a, b) { //TODO utils.ts line 96
         if (a)
             if ("_self" !=
                 b && b)
@@ -329,10 +329,10 @@
                     c ? c.src = a : (c = d.windows[b]) ? c.opener && !c.opener.closed ? c.location.href = a : d.windows[b] = window.open(a) : d.windows[b] = window.open(a)
                 } else window.location.href = a
     };
-    d.ifArray = function(a) { //TODO utils.ts line 110
+    d.ifArray = function(a) { //TODO utils.ts line 108
         return a && "object" == typeof a && 0 < a.length ? !0 : !1
     };
-    d.callMethod = function(a, b) { //TODO utils.ts line 113
+    d.callMethod = function(a, b) { //TODO utils.ts line 111
         var c;
         for (c = 0; c < b.length; c++) {
             var e = b[c];
@@ -349,10 +349,10 @@
             }
         }
     };
-    d.toNumber = function(a) { //TODO utils.ts line 130
+    d.toNumber = function(a) { //TODO utils.ts line 128
         return "number" == typeof a ? a : Number(String(a).replace(/[^0-9\-.]+/g, ""))
     };
-    d.toColor = function(a) { //TODO utils.ts line 133
+    d.toColor = function(a) { //TODO utils.ts line 131
         if ("" !== a && void 0 !== a)
             if (-1 != a.indexOf(",")) {
                 a = a.split(",");
@@ -364,29 +364,29 @@
             } else a = a.substring(a.length - 6, a.length), a = "#" + a;
         return a
     };
-    d.toCoordinate = function(a, b, c) { //TODO utils.ts line 145
+    d.toCoordinate = function(a, b, c) { //TODO utils.ts line 143
         var e;
         void 0 !== a && (a = String(a), c && c < b && (b = c), e = Number(a), -1 != a.indexOf("!") &&
         (e = b - Number(a.substr(1))), -1 != a.indexOf("%") && (e = b * Number(a.substr(0, a.length - 1)) / 100));
         return e
     };
-    d.fitToBounds = function(a, b, c) { //TODO utils.ts line 151
+    d.fitToBounds = function(a, b, c) { //TODO utils.ts line 149
         a < b && (a = b);
         a > c && (a = c);
         return a
     };
-    d.isDefined = function(a) { //TODO utils.ts line 156
+    d.isDefined = function(a) { //TODO utils.ts line 154
         return void 0 === a ? !1 : !0
     };
-    d.stripNumbers = function(a) { //TODO utils.ts line 159
+    d.stripNumbers = function(a) { //TODO utils.ts line 157
         return a.replace(/[0-9]+/g, "")
     };
-    d.roundTo = function(a, b) { //TODO utils.ts line 162
+    d.roundTo = function(a, b) { //TODO utils.ts line 160
         if (0 > b) return a;
         var c = Math.pow(10, b);
         return Math.round(a * c) / c
     };
-    d.toFixed = function(a, b) { //TODO utils.ts line 167
+    d.toFixed = function(a, b) { //TODO utils.ts line 165
         var c = !1;
         0 > a && (c = !0, a = Math.abs(a));
         var e = String(Math.round(a * Math.pow(10, b)));
@@ -591,22 +591,22 @@
         }
         return c
     };
-    d.applyTheme = function(a, b, c) {
+    d.applyTheme = function(a, b, c) { // FIXME BaseClass.ts line 64
         b || (b = d.theme);
         try {
             b = JSON.parse(JSON.stringify(b))
         } catch (e) {}
         b && b[c] && d.extend(a, b[c])
     };
-    d.isString = function(a) {
+    d.isString = function(a) { // TODO utils.ts line 188
         return "string" == typeof a ? !0 : !1
-    }; // TODO utils.ts line 170
-    d.extend = function(a, b, c) {
+    };
+    d.extend = function(a, b, c) { // TODO BaseClass.ts line 57
         var e;
         a || (a = {});
         for (e in b) c ? a.hasOwnProperty(e) || (a[e] = b[e]) : a[e] = b[e];
         return a
-    }; // TODO BaseClass.ts line 57
+    };
     d.copyProperties = function(a, b) {
         for (var c in a) a.hasOwnProperty(c) && "events" != c && void 0 !== a[c] && "function" != typeof a[c] && "cname" != c && (b[c] = a[c])
     };
@@ -680,7 +680,7 @@
         for (d = 0; d < e; d++) c += "0";
         return 0 > b ? Number("0." + c + String(a)) : Number(String(a) + c)
     };
-    d.setCN = function(a, b, c, e) {
+    d.setCN = function(a, b, c, e) { // TODO utils.ts line 192
         if (a.addClassNames && b && (b = b.node) && c) {
             var d = b.getAttribute("class");
             a = a.classNamePrefix + "-";
@@ -7917,7 +7917,7 @@
         }
         return a
     };
-    d.extractPeriod = function(a) {
+    d.extractPeriod = function(a) { // TODO utils.ts line 232
         var b = d.stripNumbers(a),
             c = 1;
         b != a && (c = Number(a.slice(0, a.indexOf(b))));
@@ -7979,7 +7979,7 @@
             k, l, m, n);
         return a
     };
-    d.getPeriodDuration = function(a, b) {
+    d.getPeriodDuration = function(a, b) { // TODO utils.ts line 201
         void 0 === b && (b = 1);
         var c;
         switch (a) {

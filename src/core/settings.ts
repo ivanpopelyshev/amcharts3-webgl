@@ -9,6 +9,8 @@ export const mapTranslations: Array<any> = [];
 
 export interface ISettings
 {
+    hasSVG: boolean,
+    VML: boolean,
     updateRate: number,
     useUTC: boolean,
     uid: number,
@@ -25,6 +27,8 @@ export interface ISettings
 }
 
 export const settings: ISettings = {
+    hasSVG: true,
+    VML: false,
     updateRate: 60,
     useUTC: false,
     uid: 0,

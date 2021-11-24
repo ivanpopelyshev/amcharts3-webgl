@@ -1,15 +1,21 @@
 /* eslint-disable */
 
-import { BaseClass } from "../BaseClass";
+import { BaseClass, applyTheme, remove, extend, processObject } from "../BaseClass";
+import { Guide } from "./Guide";
 import { text } from "../chartShapes";
+import { setCN, getPeriodDuration, extractPeriod, resetDateToMin } from "../utils";
+import { settings } from "..";
+import { Dict } from "@pixi/utils";
+import { RecItem } from "./RecItem";
 
-export class AxisBase extends BaseClass {
+export abstract class AxisBase extends BaseClass {
     constructor(a: any) {
         super();
         this.createEvents("clickItem", "rollOverItem", "rollOutItem", "rollOverGuide", "rollOutGuide", "clickGuide")
-        d.applyTheme(this, a, "AxisBase") // FIXME amcharts line 882 how to do it
+        applyTheme(this, a, "AxisBase")
     }
 
+    // FIXMEw are all those properties assigned to AxisBase or to BaseClass?
     titleDY = 0
     y = 0
     x = 0
@@ -99,7 +105,7 @@ export class AxisBase extends BaseClass {
         { period: "MM", format: "MMM" }, 
         { period: "YYYY", format: "YYYY" }
     ];
-    nextPeriod = {
+    nextPeriod: Dict<string> = {
         fff: "ss",
         ss: "mm",
         mm: "hh",
@@ -130,6 +136,37 @@ export class AxisBase extends BaseClass {
     titleColor: any
     titleFontSize: any
     balloon: any
+    marginsChanged: any
+    tx: any
+    ty: any
+    titleRotation: any
+    grid0: any
+    startTime: any
+    endTime: any
+    minPeriod: any
+    timeDifference: any
+    startOnAxis: any
+    dateFormatsObject: {[key: string]: string}
+    currentDateFormat: any
+    parseDates: any
+    type: any
+    id: any
+    stickBalloonToCategory: any
+    stepWidth: any
+    cellWidth: any
+    firstTime: any
+    autoRotateCount: any
+    autoRotateAngle: any
+    labelRotationR: any
+    rotate: any
+    gridPosition: any
+    twoLineMode: any
+    labelFunction: any
+    boldLabels: any
+    balloonText: any
+    stickBalloonToStart: any
+    cname: any
+    axisItemRenderer: typeof RecItem
 
     zoom(a: any, b: any): void {
         this.start = a
@@ -184,7 +221,7 @@ export class AxisBase extends BaseClass {
             var e = this.titleFontSize;
             isNaN(e) && (e = b.fontSize + 1);
             a = text(b.container, a, c, b.fontFamily, e, this.titleAlign, this.titleBold);
-            d.setCN(b, a, this.bcn + "title");
+            setCN(b, a, this.bcn + "title");
             this.titleLabel = a
         }
     }
@@ -192,16 +229,17 @@ export class AxisBase extends BaseClass {
     positionTitle (): void {
         var a = this.titleLabel;
         if (a) {
-            var b, c, e = this.labelsSet,
-                g = {};
-            0 < e.length() ? g = e.getBBox() : (g.x = 0, g.y = 0, g.width = this.width, g.height =
-                this.height, d.VML && (g.y += this.y, g.x += this.x));
+            var b, c, e = this.labelsSet 
+            var g: {[key: string]: any} = {};
+            0 < e.length() 
+                ? g = e.getBBox() 
+                : (g.x = 0, g.y = 0, g.width = this.width, g.height = this.height, settings.VML && (g.y += this.y, g.x += this.x));
             e.push(a);
             var e = g.x,
                 f = g.y;
-            d.VML && (f -= this.y, e -= this.x);
+            settings.VML && (f -= this.y, e -= this.x); 
             var h = g.width,
-                g = g.height,
+                g1 = g.height,
                 k = this.width,
                 l = this.height,
                 m = 0,
@@ -215,7 +253,7 @@ export class AxisBase extends BaseClass {
                     break;
                 case "bottom":
                     b = "left" == p ? -1 : "right" == p ? k : k / 2;
-                    c = f + g + 10 + n;
+                    c = f + g1 + 10 + n;
                     break;
                 case "left":
                     b = e - 10 - n;
@@ -235,18 +273,18 @@ export class AxisBase extends BaseClass {
         }
     }
 
-    pushAxisItem (a: any, b: any): void {
+    pushAxisItem (a: any, b?: any): void {
         var c = this,
             e = a.graphics();
         0 < e.length() && (b ? c.labelsSet.push(e) : c.set.push(e));
-        if (e = a.getLabel()) c.labelsSet.push(e), e.click(function(b) {
+        if (e = a.getLabel()) c.labelsSet.push(e), e.click(function(b: any) {
             c.handleMouse(b, a, "clickItem")
-        }).touchend(function(b) {
+        }).touchend(function(b: any) {
             c.handleMouse(b, a, "clickItem")
-        }).mouseover(function(b) {
+        }).mouseover(function(b: any) {
             c.handleMouse(b,
                 a, "rollOverItem")
-        }).mouseout(function(b) {
+        }).mouseout(function(b: any) {
             c.handleMouse(b, a, "rollOutItem")
         })
     }
@@ -265,7 +303,7 @@ export class AxisBase extends BaseClass {
 
     addGuide (a: any): void {
         for (var b = this.guides, c = !1, e = b.length, g = 0; g < b.length; g++) b[g] == a && (c = !0, e = g);
-        a = d.processObject(a, d.Guide, this.theme);
+        a = processObject(a, Guide, this.theme); // FIXME this.theme this relates to the class or to the global object "d"
         a.id || (a.id = "guideAuto" + e + "_" + (new Date).getTime());
         c || b.push(a)
     }
@@ -287,10 +325,10 @@ export class AxisBase extends BaseClass {
         };
         a.graphics && (b = a.graphics.getBBox());
         var c = this.x + b.x + b.width / 2,
-            b = this.y + b.y + b.height / 2,
+            b1 = this.y + b.y + b.height / 2,
             e = a.fillColor;
         void 0 === e && (e = a.lineColor);
-        this.chart.showBalloon(a.balloonText, e, !0, c, b);
+        this.chart.showBalloon(a.balloonText, e, !0, c, b1);
         this.fire({
             type: "rollOverGuide",
             guide: a,
@@ -298,7 +336,7 @@ export class AxisBase extends BaseClass {
         })
     }
 
-    handleGuideOut (a): void {
+    handleGuideOut (a: any): void {
         this.chart.hideBalloon();
         this.fire({
             type: "rollOutGuide",
@@ -307,7 +345,7 @@ export class AxisBase extends BaseClass {
         })
     }
 
-    handleGuideClick (a): void {
+    handleGuideClick (a: any): void {
         this.chart.hideBalloon();
         this.fire({
             type: "clickGuide",
@@ -316,7 +354,7 @@ export class AxisBase extends BaseClass {
         })
     }
 
-    addEventListeners (a, b): void {
+    addEventListeners (a: any, b: any): void {
         var c = this;
         a.mouseover(function() {
             c.handleGuideOver(b)
@@ -335,7 +373,7 @@ export class AxisBase extends BaseClass {
     getBBox (): void {
         var a;
         this.labelsSet && (a = this.labelsSet.getBBox());
-        a ? d.VML || (a = {
+        a ? settings.VML || (a = {
             x: a.x + this.x,
             y: a.y + this.y,
             width: a.width,
@@ -350,14 +388,14 @@ export class AxisBase extends BaseClass {
     }
 
     destroy (): void {
-        d.remove(this.set);
-        d.remove(this.labelsSet);
+        remove(this.set);
+        remove(this.labelsSet);
         var a = this.axisLine;
-        a && d.remove(a.axisSet);
-        d.remove(this.grid0)
+        a && remove(a.axisSet);
+        remove(this.grid0)
     }
 
-    chooseMinorFrequency (a): void {
+    chooseMinorFrequency (a: any): number {
         for (var b = 10; 0 < b; b--)
             if (a / b == Math.round(a / b)) return a / b
     }
@@ -367,23 +405,27 @@ export class AxisBase extends BaseClass {
             c = this.showFirstLabel,
             e = this.showLastLabel,
             g, f = "",
-            h = d.extractPeriod(this.minPeriod),
-            k = d.getPeriodDuration(h.period, h.count),
+            h = extractPeriod(this.minPeriod),
+            k = getPeriodDuration(h.period, h.count),
             l, m, n, q, p, t = this.firstDayOfWeek,
             r = this.boldPeriodBeginning;
         a = this.minorGridEnabled;
-        var w, z = this.gridAlpha,
-            x, u = this.choosePeriod(0),
-            A = u.period,
-            u = u.count,
-            y = d.getPeriodDuration(A, u);
-        y < k && (A = h.period, u = h.count, y = k);
-        h = A;
-        "WW" == h && (h = "DD");
+        var w, z = this.gridAlpha
+        var x, u = this.choosePeriod(0)
+        var A = u.period
+        var uCount = u.count
+        var y = getPeriodDuration(A, uCount);
+        if (y < k) {
+            A = h.period 
+            uCount = h.count 
+            y = k
+        } 
+        var hPeriod = A;
+        "WW" == hPeriod && (hPeriod = "DD");
         this.stepWidth = this.getStepWidth(this.timeDifference);
         var B = Math.ceil(this.timeDifference / y) + 5,
-            D = l = d.resetDateToMin(new Date(this.startTime - y), A, u, t).getTime();
-        if (h == A && 1 == u && this.centerLabelOnFullPeriod || this.autoWrap || this.centerLabels) n = y * this.stepWidth, this.autoWrap && !this.centerLabels && (n = -n);
+            D = l = resetDateToMin(new Date(this.startTime - y), A, uCount, t).getTime();
+        if (hPeriod == A && 1 == uCount && this.centerLabelOnFullPeriod || this.autoWrap || this.centerLabels) n = y * this.stepWidth, this.autoWrap && !this.centerLabels && (n = -n);
         this.cellWidth = k * this.stepWidth;
         q = Math.round(l / y);
         k = -1;
@@ -392,78 +434,93 @@ export class AxisBase extends BaseClass {
         var C = 0,
             I = 0;
         a &&
-        1 < u && (w = this.chooseMinorFrequency(u), x = d.getPeriodDuration(A, w), "DD" == A && (x += d.getPeriodDuration("hh")), "fff" == A && (x = 1));
+        1 < uCount && (w = this.chooseMinorFrequency(uCount), x = getPeriodDuration(A, w), "DD" == A && (x += getPeriodDuration("hh")), "fff" == A && (x = 1));
         if (0 < this.gridCountR)
             for (B - 5 - k > this.autoRotateCount && !isNaN(this.autoRotateAngle) && (this.labelRotationR = this.autoRotateAngle), a = k; a <= B; a++) {
                 p = q + y * (a + Math.floor((D - q) / y)) - C;
                 "DD" == A && (p += 36E5);
-                p = d.resetDateToMin(new Date(p), A, u, t).getTime();
-                "MM" == A && (g = (p - l) / y, 1.5 <= (p - l) / y && (p = p - (g - 1) * y + d.getPeriodDuration("DD", 3), p = d.resetDateToMin(new Date(p), A, 1).getTime(), C += y));
+                p = resetDateToMin(new Date(p), A, uCount, t).getTime();
+                "MM" == A && (g = (p - l) / y, 1.5 <= (p - l) / y && (p = p - (g - 1) * y + getPeriodDuration("DD", 3), p = resetDateToMin(new Date(p), A, 1).getTime(), C += y));
                 g = (p - this.startTime) *
                     this.stepWidth;
                 if ("radar" == b.type) {
                     if (g = this.axisWidth - g, 0 > g || g > this.axisWidth) continue
                 } else this.rotate ? "date" == this.type && "middle" == this.gridPosition && (I = -y * this.stepWidth / 2) : "date" == this.type && (g = this.axisWidth - g);
                 f = !1;
-                this.nextPeriod[h] && (f = this.checkPeriodChange(this.nextPeriod[h], 1, p, l, h));
+                this.nextPeriod[hPeriod] && (f = this.checkPeriodChange(this.nextPeriod[hPeriod], 1, p, l, hPeriod));
                 l = !1;
-                f && this.markPeriodChange ? (f = this.dateFormatsObject[this.nextPeriod[h]], this.twoLineMode && (f = this.dateFormatsObject[h] + "\n" + f, f = d.fixBrakes(f)), l = !0) : f = this.dateFormatsObject[h];
+                let format: any
+                f && this.markPeriodChange 
+                    ? (f = this.dateFormatsObject[this.nextPeriod[hPeriod]], this.twoLineMode && (f = this.dateFormatsObject[hPeriod] + "\n" + f, f = d.fixBrakes(f)), l = !0) 
+                    : f = this.dateFormatsObject[hPeriod];
                 r || (l = !1);
                 this.currentDateFormat =
                     f;
                 f = d.formatDate(new Date(p), f, b);
                 if (a == k && !c || a == B && !e) f = " ";
-                this.labelFunction && (f = this.labelFunction(f, new Date(p), this, A, u, m).toString());
+                this.labelFunction && (f = this.labelFunction(f, new Date(p), this, A, uCount, m).toString());
                 this.boldLabels && (l = !0);
-                m = new this.axisItemRenderer(this, g, f, !1, n, I, !1, l);
+                m = new this.axisItemRenderer(this, g, f, !1, n, I, !1, l); // FIXME amcharts.js line 5233 its initialized in ChartScrollbar
                 this.pushAxisItem(m);
                 m = l = p;
                 if (!isNaN(w))
-                    for (g = 1; g < u; g += w) this.gridAlpha = this.minorGridAlpha, f = p + x * g, f = d.resetDateToMin(new Date(f), A, w, t).getTime(), f = new this.axisItemRenderer(this, (f - this.startTime) * this.stepWidth, void 0, void 0, void 0, void 0, void 0, void 0, void 0, !0), this.pushAxisItem(f);
+                    for (g = 1; g < uCount; g += w) this.gridAlpha = this.minorGridAlpha, f = p + x * g, f = resetDateToMin(new Date(f), A, w, t).getTime(), f = new this.axisItemRenderer(this, (f - this.startTime) * this.stepWidth, void 0, void 0, void 0, void 0, void 0, void 0, void 0, !0), this.pushAxisItem(f);
                 this.gridAlpha = z
             }
     }
 
-    choosePeriod (a): void {
-        var b = d.getPeriodDuration(this.periods[a].period, this.periods[a].count),
-            c = this.periods;
-        return this.timeDifference < b && 0 < a ? c[a - 1] : Math.ceil(this.timeDifference / b) <= this.gridCountR ? c[a] : a + 1 < c.length ? this.choosePeriod(a + 1) : c[a]
+    choosePeriod (a: number): { period: string, count: number } {
+        var b = getPeriodDuration(this.periods[a].period, this.periods[a].count)
+        var c = this.periods;
+        return this.timeDifference < b && 
+            0 < a 
+                ? c[a - 1] 
+                : Math.ceil(this.timeDifference / b) <= this.gridCountR 
+                    ? c[a] 
+                    : a + 1 < c.length 
+                        ? this.choosePeriod(a + 1) 
+                        : c[a]
     }
 
-    getStepWidth (a): void {
+    getStepWidth (a: any): void {
         var b;
-        this.startOnAxis ? (b = this.axisWidth / (a - 1), 1 == a && (b = this.axisWidth)) : b = this.axisWidth / a;
+        this.startOnAxis 
+            ? (b = this.axisWidth / (a - 1), 1 == a && (b = this.axisWidth)) 
+            : b = this.axisWidth / a;
         return b
     }
 
-    timeZoom (a, b): void {
+    timeZoom (a: any, b: any): void {
         this.startTime = a;
         this.endTime = b
     }
 
-    minDuration (): void {
-        var a = d.extractPeriod(this.minPeriod);
-        return d.getPeriodDuration(a.period, a.count)
+    minDuration (): number {
+        var a = extractPeriod(this.minPeriod);
+        return getPeriodDuration(a.period, a.count)
     }
 
-    checkPeriodChange (a, b, c, e, g): void {
+    checkPeriodChange (a: any, b: any, c: any, e: any, g: any): boolean {
         c = new Date(c);
         var f = new Date(e),
             h = this.firstDayOfWeek;
         e = b;
         "DD" == a && (b = 1);
-        c = d.resetDateToMin(c, a, b, h).getTime();
-        b = d.resetDateToMin(f, a, b, h).getTime();
-        return "DD" == a && "hh" != g && c - b < d.getPeriodDuration(a, e) - d.getPeriodDuration("hh", 1) ? !1 : c != b ? !0 : !1
+        c = resetDateToMin(c, a, b, h).getTime();
+        b = resetDateToMin(f, a, b, h).getTime();
+        return "DD" == a && "hh" != g && c - b < getPeriodDuration(a, e) - getPeriodDuration("hh", 1) 
+            ? !1 
+            : c != b 
+                ? !0 
+                : !1
     }
 
     generateDFObject (): void {
         this.dateFormatsObject = {};
-        var a;
-        for (a = 0; a < this.dateFormats.length; a++) {
-            var b = this.dateFormats[a];
-            this.dateFormatsObject[b.period] = b.format
-        }
+        this.dateFormats.forEach((singleDateFormat) => {
+            let { period, format } = singleDateFormat
+            this.dateFormatsObject[period] = format
+        })
     }
 
     hideBalloon (): void {
@@ -472,11 +529,11 @@ export class AxisBase extends BaseClass {
         this.prevBY = this.prevBX = NaN
     }
 
-    formatBalloonText (a): void {
+    formatBalloonText (a: any): any {
         return a
     }
 
-    showBalloon (a, b, c, e): void {
+    showBalloon (a: any, b: any, c: any, e: any): void {
         var d = this.offset;
         switch (this.position) {
             case "bottom":
@@ -498,8 +555,8 @@ export class AxisBase extends BaseClass {
                 this.hideBalloon();
                 return
             }
-            b = this.adjustBalloonCoordinate(b, e);
-            e = this.coordinateToValue(b)
+            b = this.adjustBalloonCoordinate(b, e); // FIXME here it takes 1 argument but in serial.js line 1647 it takes 2 args (in class that inherits AxisBase)
+            e = this.coordinateToValue(b) // наш класс AxisBase - абстрактный, значит вызываются только его дети и эта функция тоже абстрактная
         } else {
             if (0 > a || a > this.width) return;
             if (isNaN(a)) {
@@ -507,21 +564,23 @@ export class AxisBase extends BaseClass {
                 return
             }
             a = this.adjustBalloonCoordinate(a, e);
-            e = this.coordinateToValue(a)
+            e = this.coordinateToValue(a) // наш класс AxisBase - абстрактный, значит вызываются только его дети и эта функция тоже абстрактная
         }
         var f;
         if (d = this.chart.chartCursor) f = d.index;
         if (this.balloon && void 0 !== e && this.balloon.enabled) {
             if (this.balloonTextFunction) {
                 if ("date" == this.type || !0 === this.parseDates) e = new Date(e);
-                e = this.balloonTextFunction(e)
-            } else this.balloonText ? e = this.formatBalloonText(this.balloonText, f, c) : isNaN(e) || (e = this.formatValue(e, c));
+                e = this.balloonTextFunction(e) // FIXME function is not declared nowhere
+            } else this.balloonText ? e = this.formatBalloonText(this.balloonText, f, c) : isNaN(e) || (e = this.formatValue(e, c)); // FIXME formatValue is in class ValueAxis amcharts.js line 1512 // FIXME formatBalloonText with 3 args is in serial.js line 1631
             if (a != this.prevBX || b != this.prevBY) this.balloon.setPosition(a, b), this.prevBX = a, this.prevBY =
                 b, e && this.balloon.showBalloon(e)
         }
     }
 
-    adjustBalloonCoordinate (a): void {
+    abstract coordinateToValue(a: any) :void
+
+    adjustBalloonCoordinate (a: any, b?: any): void {
         return a
     }
 
@@ -529,7 +588,7 @@ export class AxisBase extends BaseClass {
         var a = this.chart,
             b = a.chartCursor;
         b && (b = b.cursorPosition, "mouse" != b && (this.stickBalloonToCategory = !0), "start" == b && (this.stickBalloonToStart = !0), "ValueAxis" == this.cname && (this.stickBalloonToCategory = !1));
-        this.balloon && (this.balloon.destroy && this.balloon.destroy(), d.extend(this.balloon, a.balloon, !0))
+        this.balloon && (this.balloon.destroy && this.balloon.destroy(), extend(this.balloon, a.balloon, !0))
     }
 
     setBalloonBounds (): void {

@@ -60,3 +60,22 @@ export function extend(a: any, b: any, c = false): any {
     for (e in b) c ? a.hasOwnProperty(e) || (a[e] = b[e]) : a[e] = b[e];
     return a
 }
+
+export function applyTheme (a: any, b: any, c: string) { // b - набор тем
+    b || (b = d.theme); // FIXME where d.theme is set?
+        try {
+            b = JSON.parse(JSON.stringify(b))
+        } catch (e) {}
+        b && b[c] && extend(a, b[c])
+}
+
+export function remove(a: any) {
+    a && a.remove()
+};
+
+export function processObject(a: any, b: any, c: any, e?: any) {
+    if (!1 === a instanceof b && (a = e ? extend(new b(c),
+        a) : extend(a, new b(c), !0), a.listeners))
+        for (var g in a.listeners) b = a.listeners[g], a.addListener(b.event, b.method);
+    return a
+};
