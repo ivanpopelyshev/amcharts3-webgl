@@ -12,3 +12,7 @@ export interface IChartParams {
     type: string;
     theme?: string | IChartTheme;
 }
+
+export interface ITextDrawer {
+    text(b: any, c: any): any;
+}

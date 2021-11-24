@@ -17,9 +17,16 @@ export abstract class AxisBase extends BaseClass {
         applyTheme(this, a, "AxisBase")
     }
 
+    // Theme-related fields
+    /**
+     * AxisValue and other set this, for cname=='ValueAxis'
+     */
+    cname?: string
+    /**
+     * Theme passed in the class
+     */
     theme: ITheme;
 
-    // FIXMEw are all those properties assigned to AxisBase or to BaseClass?
     titleDY = 0
     y = 0
     x = 0
@@ -169,7 +176,6 @@ export abstract class AxisBase extends BaseClass {
     boldLabels: any
     balloonText: any
     stickBalloonToStart: any
-    cname: any
     axisItemRenderer: typeof RecItem
     balloonTextFunction: any
 
@@ -455,13 +461,13 @@ export abstract class AxisBase extends BaseClass {
                 this.nextPeriod[hPeriod] && (fBool = this.checkPeriodChange(this.nextPeriod[hPeriod], 1, p, l, hPeriod));
                 l = !1;
                 let format: any
-                fBool && this.markPeriodChange 
+                fBool && this.markPeriodChange
                     ? (
-                        f = this.dateFormatsObject[this.nextPeriod[hPeriod]], 
-                        this.twoLineMode && (f = this.dateFormatsObject[hPeriod] + "\n" + f, 
-                        f = fixBrakes(f)), 
+                        f = this.dateFormatsObject[this.nextPeriod[hPeriod]],
+                        this.twoLineMode && (f = this.dateFormatsObject[hPeriod] + "\n" + f,
+                        f = fixBrakes(f)),
                         l = !0
-                    ) 
+                    )
                     : f = this.dateFormatsObject[hPeriod];
                 r || (l = !1);
                 this.currentDateFormat = f;

@@ -1,6 +1,7 @@
 /* eslint-disable */
 
 import { settings } from "./settings";
+import { ITextDrawer } from './interfaces';
 
 // amcharts.js lines 6264 to 6572
 
@@ -32,7 +33,7 @@ export function circle(a: any, b: any, c: any, e: any, g: any, f: any, h: any, k
     return obj
 }
 
-export function text(a: any, b: any, c: any, e: any, g: any, f: any, h: any, k?: any) { // FIXME "k" seems to be an alpha value for transparency (amcharts.js line 2390)
+export function text(a: ITextDrawer, b: string, c: any, e: any, g: any, f: any, h: any, k?: any) { // FIXME "k" seems to be an alpha value for transparency (amcharts.js line 2390)
     f || (f = "middle");
     "right" == f && (f = "end");
     "left" == f && (f = "start");
@@ -62,9 +63,9 @@ export function adjustLuminosity(a: any, b: any) {
     6 > a.length && (a = String(a[0]) + String(a[0]) + String(a[1]) + String(a[1]) + String(a[2]) + String(a[2]));
     b = b || 0;
     var c = "#", e, g;
-    for (g = 0; 3 > g; g++) 
-    e = parseInt(a.substr(2 * g, 2), 16), 
-    e = Math.round(Math.min(Math.max(0, e + e * b), 255)).toString(16), 
+    for (g = 0; 3 > g; g++)
+    e = parseInt(a.substr(2 * g, 2), 16),
+    e = Math.round(Math.min(Math.max(0, e + e * b), 255)).toString(16),
     c += ("00" +e).substr(e.length);
     return c
 }
