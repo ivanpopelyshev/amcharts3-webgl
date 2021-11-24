@@ -5,6 +5,7 @@ import { addGlobalListeners, clearGlobalListeners  } from "./events";
 import { ready, handleLoad } from "./init";
 import { settings, themes } from "./settings";
 import { realWrite, isString } from "./utils";
+import { IChartParams, IChartTheme, ITheme } from './interfaces';
 
 export const charts: Array<any> = [];
 
@@ -47,41 +48,46 @@ export class AmChart extends BaseClass {
     write(a:any){}
 }
 
-export function makeChart (a: any, b: any, c: any):AmChart {
+export function makeChart (a: any, b: IChartParams, delay?: number):AmChart {
     var e = b.type,
         g = b.theme;
     addGlobalListeners();
-    isString(g) && (g = themes[g], b.theme = g);
-    var f:AmChart;
+    let theme: ITheme;
+    if (isString(g)) {
+        theme = b.theme = themes[g];
+    } else {
+        theme = g;
+    }
+    var instance: AmChart;
     switch (e) {
         case "serial":
-            f = new amClasses.AmSerialChart(g);
+            instance = new amClasses.AmSerialChart(theme);
             break;
         case "pie":
-            f = new amClasses.AmPieChart(g);
+            instance = new amClasses.AmPieChart(theme);
             break;
     }
-    extend(f, b);
-    settings.isReady ? isNaN(c) ? f.write(a) : setTimeout(function() {
-        realWrite(f, a)
-    }, c) : ready(function() {
-        isNaN(c) ? f.write(a) : setTimeout(function() {
-            realWrite(f, a)
-        }, c)
+    extend(instance, b);
+    settings.isReady ? isNaN(delay) ? instance.write(a) : setTimeout(function() {
+        realWrite(instance, a)
+    }, delay) : ready(function() {
+        isNaN(delay) ? instance.write(a) : setTimeout(function() {
+            realWrite(instance, a)
+        }, delay)
     });
-    return f
+    return instance
 }
 
 export function clear () {
     var a = charts
     if (a) {
-        for (var b = a.length - 1; 0 <= b; b--) { 
+        for (var b = a.length - 1; 0 <= b; b--) {
             a[b].clear()
         }
     }
     if (requestAnimation) {
         window.cancelAnimationFrame(requestAnimation);
-    } 
+    }
     charts.length = 0;
     clearGlobalListeners()
-};
+}

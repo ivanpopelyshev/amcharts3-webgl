@@ -183,11 +183,11 @@ export function toFixed(a: any, b: any)  {
 
 export function realWrite (a: any, b: any) {
     a.write(b)
-};
+}
 
-export function isString (a: any) {
+export function isString (a: any): a is String {
     return "string" == typeof a ? !0 : !1
-};
+}
 
 export function setCN (a: any, b: any, c: any, e?: any) {
     if (a.addClassNames && b && (b = b.node) && c) {

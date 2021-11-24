@@ -1,7 +1,9 @@
 /* eslint-disable */
 import type { ILang } from './locale';
+import type { ITheme } from './interfaces';
+import { Dict } from '@pixi/utils';
 
-export const themes: Array<string> = [];
+export const themes: Dict<ITheme> = {};
 export const maps: Array<string> = [];
 export const inheriting: Array<any> = [];
 export const windows: Array<any> = [];
@@ -20,6 +22,7 @@ export interface ISettings
     isNN: boolean,
     isReady: boolean,
     lang: ILang,
+    theme: Dict<ITheme>,
     amString: string,
     pmString: string,
     processDelay: number,
@@ -38,6 +41,7 @@ export const settings: ISettings = {
     isIE: false,
     isNN: false,
     lang: {},
+    theme: {},
     amString: 'am',
     pmString: 'pm',
     isReady: false,

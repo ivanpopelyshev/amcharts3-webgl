@@ -8,6 +8,7 @@ import { settings } from "../settings";
 import { formatDate } from "../locale"
 import { Dict } from "@pixi/utils";
 import { RecItem } from "./RecItem";
+import { ITheme } from '../interfaces';
 
 export abstract class AxisBase extends BaseClass {
     constructor(a: any) {
@@ -15,6 +16,8 @@ export abstract class AxisBase extends BaseClass {
         this.createEvents("clickItem", "rollOverItem", "rollOutItem", "rollOverGuide", "rollOutGuide", "clickGuide")
         applyTheme(this, a, "AxisBase")
     }
+
+    theme: ITheme;
 
     // FIXMEw are all those properties assigned to AxisBase or to BaseClass?
     titleDY = 0
@@ -62,48 +65,48 @@ export abstract class AxisBase extends BaseClass {
     titleWidth = 0;
     periods = [
         { period: "fff", count: 1 },
-        { period: "fff", count: 5 }, 
-        { period: "fff", count: 10 }, 
-        { period: "fff", count: 50 }, 
-        { period: "fff", count: 100 }, 
-        { period: "fff", count: 500 }, 
-        { period: "ss", count: 1 }, 
-        { period: "ss", count: 5 }, 
-        { period: "ss", count: 10 }, 
-        { period: "ss", count: 30 }, 
-        { period: "mm", count: 1 }, 
-        { period: "mm", count: 5 }, 
-        { period: "mm", count: 10 }, 
-        { period: "mm", count: 30 }, 
-        { period: "hh", count: 1 }, 
-        { period: "hh", count: 3 }, 
-        { period: "hh", count: 6 }, 
-        { period: "hh", count: 12 }, 
-        { period: "DD", count: 1 }, 
-        { period: "DD", count: 2 }, 
-        { period: "DD", count: 3 }, 
-        { period: "DD", count: 4 }, 
-        { period: "DD", count: 5 }, 
-        { period: "WW", count: 1 }, 
-        { period: "MM", count: 1 }, 
-        { period: "MM", count: 2 }, 
-        { period: "MM", count: 3 }, 
-        { period: "MM", count: 6 }, 
-        { period: "YYYY", count: 1 }, 
-        { period: "YYYY", count: 2 }, 
-        { period: "YYYY", count: 5 }, 
-        { period: "YYYY", count: 10 }, 
-        { period: "YYYY", count: 50 }, 
+        { period: "fff", count: 5 },
+        { period: "fff", count: 10 },
+        { period: "fff", count: 50 },
+        { period: "fff", count: 100 },
+        { period: "fff", count: 500 },
+        { period: "ss", count: 1 },
+        { period: "ss", count: 5 },
+        { period: "ss", count: 10 },
+        { period: "ss", count: 30 },
+        { period: "mm", count: 1 },
+        { period: "mm", count: 5 },
+        { period: "mm", count: 10 },
+        { period: "mm", count: 30 },
+        { period: "hh", count: 1 },
+        { period: "hh", count: 3 },
+        { period: "hh", count: 6 },
+        { period: "hh", count: 12 },
+        { period: "DD", count: 1 },
+        { period: "DD", count: 2 },
+        { period: "DD", count: 3 },
+        { period: "DD", count: 4 },
+        { period: "DD", count: 5 },
+        { period: "WW", count: 1 },
+        { period: "MM", count: 1 },
+        { period: "MM", count: 2 },
+        { period: "MM", count: 3 },
+        { period: "MM", count: 6 },
+        { period: "YYYY", count: 1 },
+        { period: "YYYY", count: 2 },
+        { period: "YYYY", count: 5 },
+        { period: "YYYY", count: 10 },
+        { period: "YYYY", count: 50 },
         { period: "YYYY", count: 100 }
     ];
     dateFormats = [
-        { period: "fff", format: "NN:SS.QQQ" }, 
-        { period: "ss", format: "JJ:NN:SS" }, 
-        { period: "mm", format: "JJ:NN" }, 
-        { period: "hh", format: "JJ:NN" }, 
-        { period: "DD", format: "MMM DD" }, 
-        { period: "WW", format: "MMM DD" }, 
-        { period: "MM", format: "MMM" }, 
+        { period: "fff", format: "NN:SS.QQQ" },
+        { period: "ss", format: "JJ:NN:SS" },
+        { period: "mm", format: "JJ:NN" },
+        { period: "hh", format: "JJ:NN" },
+        { period: "DD", format: "MMM DD" },
+        { period: "WW", format: "MMM DD" },
+        { period: "MM", format: "MMM" },
         { period: "YYYY", format: "YYYY" }
     ];
     nextPeriod: Dict<string> = {
@@ -119,7 +122,7 @@ export abstract class AxisBase extends BaseClass {
     dataChanged: any
     prevBY: any
     prevBX: any
-    axisRenderer: any // потом сюда присвоим класс 
+    axisRenderer: any // потом сюда присвоим класс
     position: any
     orientation: any
     chart: any
@@ -231,15 +234,15 @@ export abstract class AxisBase extends BaseClass {
     positionTitle (): void {
         var a = this.titleLabel;
         if (a) {
-            var b, c, e = this.labelsSet 
+            var b, c, e = this.labelsSet
             var g: {[key: string]: any} = {};
-            0 < e.length() 
-                ? g = e.getBBox() 
+            0 < e.length()
+                ? g = e.getBBox()
                 : (g.x = 0, g.y = 0, g.width = this.width, g.height = this.height, settings.VML && (g.y += this.y, g.x += this.x));
             e.push(a);
             var e = g.x,
                 f = g.y;
-            settings.VML && (f -= this.y, e -= this.x); 
+            settings.VML && (f -= this.y, e -= this.x);
             var h = g.width,
                 g1 = g.height,
                 k = this.width,
@@ -418,10 +421,10 @@ export abstract class AxisBase extends BaseClass {
         var uCount = u.count
         var y = getPeriodDuration(A, uCount);
         if (y < k) {
-            A = h.period 
-            uCount = h.count 
+            A = h.period
+            uCount = h.count
             y = k
-        } 
+        }
         var hPeriod = A;
         "WW" == hPeriod && (hPeriod = "DD");
         this.stepWidth = this.getStepWidth(this.timeDifference);
@@ -485,20 +488,20 @@ export abstract class AxisBase extends BaseClass {
     choosePeriod (a: number): { period: string, count: number } {
         var b = getPeriodDuration(this.periods[a].period, this.periods[a].count)
         var c = this.periods;
-        return this.timeDifference < b && 
-            0 < a 
-                ? c[a - 1] 
-                : Math.ceil(this.timeDifference / b) <= this.gridCountR 
-                    ? c[a] 
-                    : a + 1 < c.length 
-                        ? this.choosePeriod(a + 1) 
+        return this.timeDifference < b &&
+            0 < a
+                ? c[a - 1]
+                : Math.ceil(this.timeDifference / b) <= this.gridCountR
+                    ? c[a]
+                    : a + 1 < c.length
+                        ? this.choosePeriod(a + 1)
                         : c[a]
     }
 
     getStepWidth (a: any): void {
         var b;
-        this.startOnAxis 
-            ? (b = this.axisWidth / (a - 1), 1 == a && (b = this.axisWidth)) 
+        this.startOnAxis
+            ? (b = this.axisWidth / (a - 1), 1 == a && (b = this.axisWidth))
             : b = this.axisWidth / a;
         return b
     }
@@ -521,10 +524,10 @@ export abstract class AxisBase extends BaseClass {
         "DD" == a && (b = 1);
         c = resetDateToMin(c, a, b, h).getTime();
         b = resetDateToMin(f, a, b, h).getTime();
-        return "DD" == a && "hh" != g && c - b < getPeriodDuration(a, e) - getPeriodDuration("hh", 1) 
-            ? !1 
-            : c != b 
-                ? !0 
+        return "DD" == a && "hh" != g && c - b < getPeriodDuration(a, e) - getPeriodDuration("hh", 1)
+            ? !1
+            : c != b
+                ? !0
                 : !1
     }
 

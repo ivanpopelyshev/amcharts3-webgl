@@ -1,5 +1,7 @@
 /* eslint-disable */
 import { Dict } from '@pixi/utils';
+import { ITheme } from './interfaces';
+import { settings } from './settings';
 
 export type ICallback = (...args: Array<any>) => void;
 
@@ -61,8 +63,8 @@ export function extend(a: any, b: any, c = false): any {
     return a
 }
 
-export function applyTheme (a: any, b: any, c: string) { // b - набор тем
-    b || (b = d.theme); // FIXME where d.theme is set?
+export function applyTheme (a: any, b: Dict<ITheme>, c: string) { // b - набор тем
+    b || (b = settings.theme); // FIXME where d.theme is set?
         try {
             b = JSON.parse(JSON.stringify(b))
         } catch (e) {}
@@ -73,8 +75,8 @@ export function remove(a: any) {
     a && a.remove()
 };
 
-export function processObject(a: any, b: any, c: any, e?: any) {
-    if (!1 === a instanceof b && (a = e ? extend(new b(c),
+export function processObject(a: any, b: any, c: ITheme,  newObject = false) {
+    if (!1 === a instanceof b && (a = newObject ? extend(new b(c),
         a) : extend(a, new b(c), !0), a.listeners))
         for (var g in a.listeners) b = a.listeners[g], a.addListener(b.event, b.method);
     return a
