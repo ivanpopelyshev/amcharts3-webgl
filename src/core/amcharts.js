@@ -6323,7 +6323,7 @@
         p && a.gradient("linearGradient", e, l);
         return a
     };
-    d.rect = function(a, b, c, e, g, f, h, k, l, m, n) {
+    d.rect = function(a, b, c, e, g, f, h, k, l, m, n) { // TODO chartShapes.ts
         if (isNaN(b) || isNaN(c)) return a.set();
         isNaN(f) && (f = 0);
         void 0 === l && (l = 0);
@@ -6422,7 +6422,7 @@
         270 == c && (l = " M" + -b + ",0 L" + b + "," + b + " L" + b + "," + -b + " Z");
         return a.path(l).attr(d)
     };
-    d.line = function(a, b, c, e, g, f, h, k, l, m, n) {
+    d.line = function(a, b, c, e, g, f, h, k, l, m, n) { // TODO chartShapes.ts
         if (a.handDrawn && !n) return d.handDrawnLine(a, b, c, e, g, f, h, k, l, m, n);
         f = {
             fill: "none",
@@ -6452,7 +6452,7 @@
             }
         return [d, g]
     };
-    d.handDrawnLine = function(a, b, c, e, g, f, h, k, l, m) {
+    d.handDrawnLine = function(a, b, c, e, g, f, h, k, l, m) { // TODO chartShapes.ts
         var n, q = a.set();
         for (n = 1; n < b.length; n++)
             for (var p = [b[n - 1], b[n]], t = [c[n - 1], c[n]], t = d.makeHD(p, t, a.handDrawScatter), p = t[0], t = t[1], r = 1; r < p.length; r++) q.push(d.line(a, [p[r - 1], p[r]], [t[r - 1], t[r]], e, g, f + Math.random() * a.handDrawThickness - a.handDrawThickness / 2, h, k, l, m, !0));
